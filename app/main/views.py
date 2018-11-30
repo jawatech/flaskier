@@ -54,7 +54,7 @@ def index():
         error_out=False)
     posts = pagination.items
     return render_template('index.html', form=form, posts=posts,
-                           show_followed=show_followed, pagination=pagination)
+                           show_followed=show_followed, pagination=pagination, title=current_app.config['TITLE'])
 
 
 @main.route('/user/<username>')

@@ -20,7 +20,7 @@ class Config:
     FLASKY_FOLLOWERS_PER_PAGE = 50
     FLASKY_COMMENTS_PER_PAGE = 30
     FLASKY_SLOW_DB_QUERY_TIME = 0.5
-
+    TITLE = 'twmle step 2 醫師第二階段國考考題線上模考與討論'
     @staticmethod
     def init_app(app):
         pass
