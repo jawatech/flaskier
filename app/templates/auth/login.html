@@ -1,13 +1,28 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-
+## https://github.com/gae-init/gae-init/tree/python37
+## http://lipis.github.io/bootstrap-social/
+# import 'macro/utils.html' as utils
 {% block title %}Flasky - Login{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Login</h1>
+    <h1>登入</h1>
 </div>
-<div class="col-md-4">
+<div class="col-md-4 text-center">
+        # set is_icon = True
+        ## https://fontawesome.com/icons/google?style=brands
+        <div class="text-center">
+          {{utils.signin_button('Facebook', 'btn-facebook', 'fa-facebook-f', 'fb', is_icon) }}
+##           {{utils.signin_button('Twitter', 'btn-twitter', 'fa-twitter', twitter_signin_url, is_icon) if config.CONFIG_DB.has_twitter}}
+##           {{utils.signin_button('Dropbox', 'btn-dropbox', 'fa-dropbox', dropbox_signin_url, is_icon) if config.CONFIG_DB.has_dropbox}}
+          {{utils.signin_button('GitHub', 'btn-github', 'fa-github', 'github', is_icon)}}
+          {{utils.signin_button('Google', 'btn-google', 'fa-google', google_signin_url, is_icon) }}
+##           {{utils.signin_button('Instagram', 'btn-instagram', 'fa-instagram', instagram_signin_url, is_icon) if config.CONFIG_DB.has_instagram}}
+##           {{utils.signin_button('LinkedIn', 'btn-linkedin', 'fa-linkedin', linkedin_signin_url, is_icon) if config.CONFIG_DB.has_linkedin}}
+
+        </div>
+        <legend class="text-muted text-center">or</legend>
     {{ wtf.quick_form(form) }}
     <br>
     <p>Forgot your password? <a href="{{ url_for('auth.password_reset_request') }}">Click here to reset it</a>.</p>

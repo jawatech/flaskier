@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail
@@ -6,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import config
+from flask_dance.contrib.github import make_github_blueprint
 
 bootstrap = Bootstrap()
 mail = Mail()
@@ -15,7 +17,6 @@ pagedown = PageDown()
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
-
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -41,5 +42,10 @@ def create_app(config_name):
 
     from .api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/v1')
+
+    app.config["GITHUB_OAUTH_CLIENT_ID"] = os.environ.get("GITHUB_OAUTH_CLIENT_ID")
+    app.config["GITHUB_OAUTH_CLIENT_SECRET"] = os.environ.get("GITHUB_OAUTH_CLIENT_SECRET")
+    github_bp = make_github_blueprint()    
+    app.register_blueprint(github_bp, url_prefix="/login")    
 
     return app

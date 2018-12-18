@@ -7,7 +7,7 @@ from ..models import User
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
-
+from flask_dance.contrib.github import github
 
 @auth.before_app_request
 def before_request():
@@ -40,6 +40,14 @@ def login():
             return redirect(next)
         flash('Invalid username or password.')
     return render_template('auth/login.html', form=form)
+    
+@auth.route("/github")
+def gh():
+    if not github.authorized:
+        return redirect(url_for("github.login"))
+    resp = github.get("/user")
+    assert resp.ok
+    return "You are {login} on GitHub\n{content}".format(login=resp.json()["login"], content=resp.json())
 
 
 @auth.route('/logout')

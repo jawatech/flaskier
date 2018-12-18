@@ -40,5 +40,5 @@ tmp
 
 # Virtual environment
 venv
-
+env
 *.bak

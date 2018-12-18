@@ -14,6 +14,8 @@ from app.models import User, Follow, Role, Permission, Post, Comment
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
+app.jinja_env.line_statement_prefix = '#'
+app.jinja_env.line_comment_prefix = '##'
 
 
 @app.shell_context_processor
