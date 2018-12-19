@@ -20,6 +20,21 @@ c. 沒有設定 FLASK_CONFIG 環境變數為 heroku
 
 d. git push heroku master 後記得執行 heroku run flask deploy 來初始化資料庫
 
+整合 Github 社群網站 OAuth 登入
+==============================
+喵的這花了本魯至少3天的時間才摸出來
+
+請參考 https://github.com/singingwolfboy/flask-dance-github 去 github 申請個 ID/Secret ， 三個環境變數要設 GITHUB_OAUTH_CLIENT_ID，GITHUB_OAUTH_CLIENT_SECRET，OAUTHLIB_INSECURE_TRANSPORT。但是它提供的範例只把頭洗了一半…詳情見 app/auth/view.py
+
+win10上本機測試小提醒
+====================
+
+waitress 是你回家的路，環境變數 FLASK_APP，FLASK_DEBUG 要先設好，資料庫初始化指令：
+
+flask db upgrade  
+flask shell  
+Role.insert_roles()  
+
 Flasky
 ======
 
