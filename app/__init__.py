@@ -4,10 +4,11 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_pagedown import PageDown
 from config import config
 from flask_dance.contrib.github import make_github_blueprint
+from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
 
 bootstrap = Bootstrap()
 mail = Mail()
@@ -45,7 +46,9 @@ def create_app(config_name):
 
     app.config["GITHUB_OAUTH_CLIENT_ID"] = os.environ.get("GITHUB_OAUTH_CLIENT_ID")
     app.config["GITHUB_OAUTH_CLIENT_SECRET"] = os.environ.get("GITHUB_OAUTH_CLIENT_SECRET")
-    github_bp = make_github_blueprint()    
+    github_bp = make_github_blueprint(redirect_to='auth.github')    
     app.register_blueprint(github_bp, url_prefix="/login")    
+    from .models import OAuth
+#    github_bp.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
     return app

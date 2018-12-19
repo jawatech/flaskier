@@ -7,7 +7,10 @@ from ..models import User
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
-from flask_dance.contrib.github import github
+from flask_dance.contrib.github import github as gh
+import json
+import logging
+log = logging.getLogger(__name__)
 
 @auth.before_app_request
 def before_request():
@@ -29,6 +32,9 @@ def unconfirmed():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        flash('Your are already logged in.')
+        return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -42,12 +48,25 @@ def login():
     return render_template('auth/login.html', form=form)
     
 @auth.route("/github")
-def gh():
-    if not github.authorized:
+def github():
+    if not gh.authorized:
         return redirect(url_for("github.login"))
-    resp = github.get("/user")
+    resp = gh.get("/user")
     assert resp.ok
-    return "You are {login} on GitHub\n{content}".format(login=resp.json()["login"], content=resp.json())
+    user = User.query.filter_by(id=resp.json()["id"]).first()
+    if user is not None :
+        log.info('old user: '+user.email)
+    else:
+        user = User(username=resp.json()["login"],
+                    email=resp.json()["login"]+'@github.com',
+                    id=resp.json()["id"])
+        db.session.add(user)
+        db.session.commit()
+        user.confirm(user.generate_confirmation_token())
+        db.session.commit()
+        log.info('new user: '+user.email)
+    login_user(user,False)
+    return redirect(url_for('main.index'))
 
 
 @auth.route('/logout')
